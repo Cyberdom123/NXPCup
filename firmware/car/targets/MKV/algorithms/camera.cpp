@@ -17,14 +17,8 @@ uint32_t Algorithm::calculateBrightness(uint16_t* dataBuf) {
         brightness += dataBuf[i];
     }
 
-    float modifiedBrightness = (float)(brightness / 128) * brightnessModifier;
+    float modifiedBrightness = static_cast<float>(brightness / 128) * brightnessModifier;
     return modifiedBrightness;
-}
-
-void Algorithm::differentiate(uint16_t* input, int16_t* output) {
-    for (size_t i = imageWindowSize; i < 128 - imageWindowSize; i++) {
-        output[i] = input[i] - input[i + 1];
-    }
 }
 
 int32_t Algorithm::meanFilter(int32_t position) {
@@ -41,21 +35,25 @@ int32_t Algorithm::calculatePosition(uint16_t* dataBuf) {
     uint16_t leftLinePosition  = 0;
     uint16_t rightLinePosition = 0;
 
+
+    // Basing on the current position, adjust the search windows for the lines
+    size_t slidingWindowPosition = lastPosition / 2;
+
     // find right line
-    for (size_t i = imageWindowSize; i < cmaeraDataSize / 2; ++i) {
+    for (size_t i = imageWindowSize; i < (cameraDataSize / 2) - slidingWindowPosition; ++i) {
         if (dataBuf[i] < brightness) {
             rightLinePosition = i - imageWindowSize;
         }
     }
 
     // find left line
-    for (size_t i = imageWindowSize; i < cmaeraDataSize / 2 - imageWindowSize; ++i) {
-        if (dataBuf[cmaeraDataSize - 1 - i] < brightness) {
+    for (size_t i = imageWindowSize; i < (cameraDataSize / 2) + slidingWindowPosition; ++i) {
+        if (dataBuf[cameraDataSize - i] < brightness) {
             leftLinePosition = i - imageWindowSize;
         }
     }
-    
-    int32_t position = poistionOffset + leftLinePosition - rightLinePosition;
-    
-    return meanFilter(position);
+
+    int32_t position = leftLinePosition - rightLinePosition;
+
+    return poistionOffset + meanFilter(position);
 }

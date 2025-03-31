@@ -98,7 +98,7 @@ void Kitty::proc() {
     magicDiodComposition();
     camera.getData(cameraDataBuf);
 
-    int32_t position = newAlgorithm.calculatePosition(cameraDataBuf);
+    int32_t position = alogrithm.calculatePosition(cameraDataBuf);
 
     ////////////////////////////// Uart Log ////////////////////////////////
     if (lastLogTimepoint + LOG_UPDATE_INTERVAL < millis()) {
@@ -109,7 +109,7 @@ void Kitty::proc() {
             fctprintf(logWrite, NULL, ".%hhu", buffer[i] / 158);
         }
         fctprintf(logWrite, NULL, ".%hhu", position + 63);
-        fctprintf(logWrite, NULL, ".%hhu", newAlgorithm.getBrightness());
+        fctprintf(logWrite, NULL, ".%hhu", alogrithm.getBrightness());
     }
 
     // If menu is active, do not move

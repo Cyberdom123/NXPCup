@@ -16,7 +16,7 @@
 
 class Algorithm {
   private:
-    constexpr static uint8_t cmaeraDataSize     = 128;  // Size of the camera data
+    constexpr static uint8_t cameraDataSize     = 128;  // Size of the camera data
     constexpr static uint8_t imageWindowSize    = 10;   // Cut unused pixels from both sides
     constexpr static uint8_t maxOutputChange    = 5;    // Max allowed change between previous and actual turnvalue
     constexpr static float   brightnessModifier = 1.0f;
@@ -39,6 +39,5 @@ class Algorithm {
 
   protected:
     uint32_t calculateBrightness(uint16_t* data);
-    void     differentiate(uint16_t* input, int16_t* output);
     int32_t  meanFilter(int32_t measurement);
 };
