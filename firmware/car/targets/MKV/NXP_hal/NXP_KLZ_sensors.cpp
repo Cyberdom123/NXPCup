@@ -1,4 +1,4 @@
-#include "NXP_KLZDeserializer.hpp"
+#include "NXP_KLZ_sensors.hpp"
 
 void NXP_KLZDeserializer::handleWaitingForStartFlag(uint8_t* data, size_t length) {
 

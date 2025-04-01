@@ -46,4 +46,3 @@ add_custom_command(TARGET ${NAME}
         COMMAND ${CMAKE_OBJCOPY} "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${NAME}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${NAME}.elf")
 
 target_stlink_flash(${NAME})
-target_jlink_flash(${NAME})

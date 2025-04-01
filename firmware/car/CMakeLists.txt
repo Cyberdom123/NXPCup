@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.24)
 # KLZ
 # MKV
 # x86
-set(TARGET KLZ)
+set(TARGET MKV)
 if(NOT TARGET)
 	set(TARGET KLZ)
 endif()
