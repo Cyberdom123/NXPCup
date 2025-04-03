@@ -2,21 +2,15 @@
 
 #include <utility>
 
-/*
- *@brief set velocity adequate to current conditions on track
- *@param startVelocity is the default speed of the car
- *@param position is the current position of the car on the track
- */
-
 Differential::Differential(float startVelocityValue) : startVelocity(startVelocityValue) {}
 
 void Differential::proc(int position) {
     if (position < 0) {
-        valueRight = (startVelocity * (ENGINE_CUT + (position))) / ENGINE_CUT;
-        valueLeft  = (startVelocity * (ENGINE_BRAKE + (position))) / ENGINE_BRAKE;
+        valueRight = (startVelocity * (engineCutoffValue + (position))) / engineCutoffValue;
+        valueLeft  = (startVelocity * (engineBrakingCoefficient + (position))) / engineBrakingCoefficient;
     } else if (position > 0) {
-        valueLeft  = (startVelocity * (ENGINE_CUT - (position))) / ENGINE_CUT;
-        valueRight = (startVelocity * (ENGINE_BRAKE - (position))) / ENGINE_BRAKE;
+        valueLeft  = (startVelocity * (engineCutoffValue - (position))) / engineCutoffValue;
+        valueRight = (startVelocity * (engineBrakingCoefficient - (position))) / engineBrakingCoefficient;
     }
 }
 float Differential::getLeft() { return valueLeft; }
