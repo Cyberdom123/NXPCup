@@ -20,7 +20,7 @@ class Algorithm {
     constexpr static uint8_t imageWindowSize    = 10;   // Cut unused pixels from both sides
     constexpr static uint8_t maxOutputChange    = 5;    // Max allowed change between previous and actual turnvalue
     constexpr static float   brightnessModifier = 1.0f;
-    constexpr static int16_t poistionOffset     = -5;
+    constexpr static int16_t poistionOffset     = -8;
 
     constexpr static float alpha           = 0.05f; // Filter parameter
     constexpr static float delta           = 3;     // Filter parameter
@@ -39,5 +39,6 @@ class Algorithm {
 
   protected:
     uint32_t calculateBrightness(uint16_t* data);
+    int32_t  calculateSlidingWindow();
     int32_t  meanFilter(int32_t measurement);
 };

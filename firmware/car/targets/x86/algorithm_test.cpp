@@ -20,7 +20,9 @@ TEST(Algorithm, LeftSide) {
         algorithm.calculatePosition(left_side);
     }
 
-    EXPECT_NEAR(-28, algorithm.calculatePosition(left_side), 5);
+    int32_t position = algorithm.calculatePosition(left_side);
+
+    EXPECT_NEAR(-28, position, 5) << "Left side position is not correct: " << position << std::endl;
 }
 
 TEST(Algorithm, RightSide) {
@@ -30,5 +32,7 @@ TEST(Algorithm, RightSide) {
         algorithm.calculatePosition(right_side);
     }
 
-    EXPECT_NEAR(32, algorithm.calculatePosition(right_side), 5);
+    int32_t position = algorithm.calculatePosition(left_side);
+
+    EXPECT_NEAR(32, position, 5) << "Right side position is not correct: " << position << std::endl;
 }
