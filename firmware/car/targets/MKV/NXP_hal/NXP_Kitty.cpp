@@ -41,6 +41,10 @@ void SysTick_Handler(void) {
 }
 }
 
+void Kitty::uartCommunicationCallback(uint8_t ch) {
+    fctprintf(logWrite, NULL, "UART KLZ: %c", ch);
+}
+
 void Kitty::init() {
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
@@ -53,6 +57,11 @@ void Kitty::init() {
     log_setWriteFunction(logWrite);
     uartCommunication.init();
     uartCommunication.initDMA();
+
+    uartKLZ.init();
+    uartKLZ.initDMA();
+    uartKLZ.enableInterrupt(NXP_Uart::InterruptType::RX_FULL);
+    uartKLZ.setRedirectHandler(uartCommunicationCallback);
 
     ledLine.init();
     display.init();
@@ -101,16 +110,16 @@ void Kitty::proc() {
     int32_t position = alogrithm.calculatePosition(cameraDataBuf);
 
     ////////////////////////////// Uart Log ////////////////////////////////
-    if (lastLogTimepoint + LOG_UPDATE_INTERVAL < millis()) {
-        lastLogTimepoint = millis();
-        fctprintf(logWrite, NULL, "\nCAML");
-        for (size_t i = 0; i < 128; i++) {
-            uint16_t* buffer = static_cast<uint16_t*>(cameraDataBuf); 
-            fctprintf(logWrite, NULL, ".%hhu", buffer[i] / 158);
-        }
-        fctprintf(logWrite, NULL, ".%hhu", position + 63);
-        fctprintf(logWrite, NULL, ".%hhu", alogrithm.getBrightness());
-    }
+    // if (lastLogTimepoint + LOG_UPDATE_INTERVAL < millis()) {
+    //     lastLogTimepoint = millis();
+    //     fctprintf(logWrite, NULL, "\nCAML");
+    //     for (size_t i = 0; i < 128; i++) {
+    //         uint16_t* buffer = static_cast<uint16_t*>(cameraDataBuf); 
+    //         fctprintf(logWrite, NULL, ".%hhu", buffer[i] / 158);
+    //     }
+    //     fctprintf(logWrite, NULL, ".%hhu", position + 63);
+    //     fctprintf(logWrite, NULL, ".%hhu", alogrithm.getBrightness());
+    // }
 
     // If menu is active, do not move
     if(menu.proc()) {

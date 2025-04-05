@@ -18,7 +18,7 @@ uint32_t Algorithm::calculateBrightness(uint16_t* dataBuf) {
     }
 
     float modifiedBrightness = static_cast<float>(brightness / 128) * brightnessModifier;
-    return modifiedBrightness;
+    return static_cast<uint32_t>(modifiedBrightness);
 }
 
 int32_t Algorithm::calculateSlidingWindow(void) {
@@ -26,7 +26,7 @@ int32_t Algorithm::calculateSlidingWindow(void) {
     // Try this
     // return (lastPosition / 2);
     // or this
-    return static_cast<int16_t>(average / 2);
+    return static_cast<int32_t>(average / 2);
 }
 
 int32_t Algorithm::meanFilter(int32_t position) {
@@ -41,22 +41,22 @@ int32_t Algorithm::calculatePosition(uint16_t* dataBuf) {
 
     // Calculate the sliding window position
     int32_t slidingWindowPosition = calculateSlidingWindow();
-    
+
     // Calculate the distance from the center of the image
-    uint16_t leftLinePosition  = 0;
-    uint16_t rightLinePosition = 0;
+    int32_t leftLinePosition  = 0;
+    int32_t rightLinePosition = 0;
 
     // find right line
-    int16_t rightWindowEnd = (cameraDataSize / 2) - slidingWindowPosition;
-    for (int16_t i = imageWindowSize; i < rightWindowEnd; ++i) {
+    int32_t rightWindowBoundary = (cameraDataSize / 2) - slidingWindowPosition;
+    for (int32_t i = imageWindowSize; i < rightWindowBoundary; ++i) {
         if (dataBuf[i] < brightness) {
             rightLinePosition = i - imageWindowSize;
         }
     }
 
     // find left line
-    int16_t leftWindowEnd = (cameraDataSize / 2) + slidingWindowPosition;
-    for (int16_t i = imageWindowSize; i < leftWindowEnd; ++i) {
+    int32_t cameraLeftWindowBoundary = (cameraDataSize / 2) + slidingWindowPosition;
+    for (int32_t i = imageWindowSize; i < cameraLeftWindowBoundary; ++i) {
         if (dataBuf[cameraDataSize - i] < brightness) {
             leftLinePosition = i - imageWindowSize;
         }

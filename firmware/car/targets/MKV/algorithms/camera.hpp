@@ -16,11 +16,10 @@
 
 class Algorithm {
   private:
-    constexpr static uint8_t cameraDataSize     = 128;  // Size of the camera data
-    constexpr static uint8_t imageWindowSize    = 10;   // Cut unused pixels from both sides
-    constexpr static uint8_t maxOutputChange    = 5;    // Max allowed change between previous and actual turnvalue
+    constexpr static uint32_t cameraDataSize     = 128;  // Size of the camera data
+    constexpr static uint32_t imageWindowSize    = 10;   // Cut unused pixels from both sides
     constexpr static float   brightnessModifier = 1.0f;
-    constexpr static int16_t poistionOffset     = -8;
+    constexpr static int32_t poistionOffset     = -8;
 
     constexpr static float alpha           = 0.05f; // Filter parameter
     constexpr static float delta           = 3;     // Filter parameter
@@ -35,7 +34,7 @@ class Algorithm {
   public:
     Algorithm(){};
     int32_t calculatePosition(uint16_t* data);
-    int16_t getBrightness() const { return brightness; } // Get brightness, used to print on the chart
+    int32_t getBrightness() const { return brightness; } // Get brightness, used to print on the chart
 
   protected:
     uint32_t calculateBrightness(uint16_t* data);

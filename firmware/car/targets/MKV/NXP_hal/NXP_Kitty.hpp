@@ -25,22 +25,23 @@
 
 #include <algorithms/camera.hpp>
 #include <algorithms/motor.hpp>
-#include <algorithms/servo.hpp> 
+#include <algorithms/servo.hpp>
+#include <application/uart_frame.hpp>
 
 void pit_generalHandler(uint32_t*);
 
 void pit_sendCameraData(uint8_t);
 
-void logWrite(char c,[[maybe_unused]] void* const context);
+void logWrite(char c, [[maybe_unused]] void* const context);
 
 class Kitty {
   private:
-    size_t lastLogTimepoint;
+    size_t                    lastLogTimepoint;
     constexpr static uint32_t LOG_UPDATE_INTERVAL = 25;
 
     // SYSTICK
     static uint_fast64_t milliseconds;
-    
+
     // LEDS
     NXP_GPIO LED0 = NXP_GPIO(PORTA, GPIOA, 16U);
     NXP_GPIO LED1 = NXP_GPIO(PORTA, GPIOA, 17U);
@@ -134,7 +135,7 @@ class Kitty {
     NXP_I2C  i2c     = {I2C1, sdaPort, sclPort, 400000};
 
     // FRAME
-    NXP_Frame frame = {uartCommunication};
+    // NXP_Frame frame = {uartCommunication};
 
   public:
     // ENKODER
@@ -142,13 +143,14 @@ class Kitty {
     NXP_Encoder encoderRight = {FTM2, encoderRightA, encoderRightB, NXP_Encoder::Mode::SingleCounter};
 
     // KAMERA
-    NXP_Camera::Type cameraType    = NXP_Camera::Type::CAMERA_1;
-    NXP_Camera       camera        = {cameraType, adc, cameraClockPin, cameraSIPin, camera1Sample, camera2Sample, uartDebug};
+    NXP_Camera::Type cameraType = NXP_Camera::Type::CAMERA_1;
+    NXP_Camera       camera     = {cameraType, adc, cameraClockPin, cameraSIPin, camera1Sample, camera2Sample, uartDebug};
     // This is now a pointer to avoid copying buffer data from one buffer to another
-    uint16_t*        cameraDataBuf = nullptr;
+    uint16_t* cameraDataBuf = nullptr;
 
     // UART
     NXP_Uart uartCommunication = {UART2, 115200, uart2RXmux, uart2TXmux, NXP_DMA::emptyDMA()};
+    NXP_Uart uartKLZ           = {UART4, 115200, uart4RXmux, uart4TXmux, NXP_DMA::emptyDMA()};
     NXP_Uart uartDebug         = {UART0, 921600, uart0RXmux, uart0TXmux, uart0DMA};
 
     // DISPLAY
@@ -161,8 +163,12 @@ class Kitty {
     NXP_Motors motors = {motorLeft, motorRight};
 
     // ALGORITHMS
-    Algorithm     alogrithm;
-    Differential  differential = Differential(0.3);
+    Algorithm    alogrithm;
+    Differential differential = Differential(0.3);
+
+    // KLZ communication
+    UART_Frame uartFrame;
+
     // MENU
     NXP_Menu menu = {buttons, switches, display, motors, differential};
 
@@ -172,7 +178,8 @@ class Kitty {
 
     static void FTM_Init();
 
-    
+    static void uartCommunicationCallback(uint8_t ch);
+
 
   public:
     void magicDiodComposition();
