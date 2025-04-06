@@ -167,7 +167,7 @@ class Kitty {
     Differential differential = Differential(0.3);
 
     // KLZ communication
-    UART_Frame uartFrame;
+    UART_Frame uartFrame = {onKLZDataReceivedCallback};
 
     // MENU
     NXP_Menu menu = {buttons, switches, display, motors, differential};
@@ -179,6 +179,7 @@ class Kitty {
     static void FTM_Init();
 
     static void uartCommunicationCallback(uint8_t ch);
+    static void onKLZDataReceivedCallback(uint8_t* data, size_t length);
 
 
   public:

@@ -13,8 +13,6 @@
 #include "pin_mux.h"
 #include "printf.h"
 
-
-
 #include "logger.h"
 bool algorithmTrigger       = false;
 bool commandTerminalTrigger = false;
@@ -41,8 +39,17 @@ void SysTick_Handler(void) {
 }
 }
 
-void Kitty::uartCommunicationCallback(uint8_t ch) {
-    fctprintf(logWrite, NULL, "UART KLZ: %c", ch);
+void Kitty::uartCommunicationCallback(uint8_t data) {
+    fctprintf(logWrite, NULL, "UART KLZ: %d", data);
+    Kitty::kitty().uartFrame.deserialize(&data, sizeof(data));
+}
+
+void Kitty::onKLZDataReceivedCallback(uint8_t* data, size_t length) {
+    if (length == 0 || length > 1) {
+        return;
+    }
+    
+    fctprintf(logWrite, NULL, "UART KLZ: %d", data[0]);   
 }
 
 void Kitty::init() {
